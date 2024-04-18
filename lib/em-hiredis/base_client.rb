@@ -172,6 +172,9 @@ module EventMachine::Hiredis
     def auth(username, password, &blk)
       @username = username
       @password = password
+
+      puts "AUTH: #{@username} / #{@password}"
+      EM::Hiredis.logger.info("AUTH: #{@username} / #{@password}")
       method_missing(:auth, username, password, &blk)
     end
 
@@ -212,6 +215,8 @@ module EventMachine::Hiredis
       deferred.callback { |result| yield(result) } if block_given?
 
       if @connected
+        puts "Method Missing - sym: #{sym} - args: #{args}"
+        EM::Hiredis.logger.info("Method Missing - sym: #{sym} - args: #{args}")
         @connection.send_command(sym, args)
         @defs.push(deferred)
       elsif @failed
