@@ -14,10 +14,10 @@ module EventMachine::Hiredis
     include EventEmitter
     include EM::Deferrable
 
-    attr_reader :host, :port, :password, :db
+    attr_reader :host, :port, :username, :password, :db
 
-    def initialize(host = 'localhost', port = 6379, password = nil, db = nil)
-      @host, @port, @password, @db = host, port, password, db
+    def initialize(host = 'localhost', port = 6379, username = nil, password = nil, db = nil)
+      @host, @port, @password, @db = host, port, username, password, db
       @defs = []
       @command_queue = []
 
@@ -50,6 +50,7 @@ module EventMachine::Hiredis
       else
         @host = uri.host
         @port = uri.port
+        @username = uri.user
         @password = uri.password
         path = uri.path[1..-1]
         @db = path.to_i # Empty path => 0
@@ -109,7 +110,7 @@ module EventMachine::Hiredis
         @reconnect_failed_count = 0
         @failed = false
 
-        auth(@password) if @password
+        auth(@username, @password) if @username || @password
         select(@db) unless @db == 0
 
         @command_queue.each do |df, command, args|
@@ -168,7 +169,8 @@ module EventMachine::Hiredis
       method_missing(:select, db, &blk)
     end
 
-    def auth(password, &blk)
+    def auth(username, password, &blk)
+      @username = username
       @password = password
       method_missing(:auth, password, &blk)
     end

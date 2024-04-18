@@ -4,7 +4,7 @@ module EventMachine::Hiredis
 
     PING_CHANNEL = '__em-hiredis-ping'
 
-    def initialize(host='localhost', port='6379', password=nil, db=nil)
+    def initialize(host='localhost', port='6379', username=nil, password=nil, db=nil)
       @subs, @psubs = [], []
       @pubsub_defs = Hash.new { |h,k| h[k] = [] }
       super
