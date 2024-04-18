@@ -172,7 +172,7 @@ module EventMachine::Hiredis
     def auth(username, password, &blk)
       @username = username
       @password = password
-      method_missing(:auth, password, &blk)
+      method_missing(:auth, username, password, &blk)
     end
 
     def close_connection
