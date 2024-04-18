@@ -17,7 +17,7 @@ module EventMachine::Hiredis
     attr_reader :host, :port, :username, :password, :db
 
     def initialize(host = 'localhost', port = 6379, username = nil, password = nil, db = nil)
-      @host, @port, @password, @db = host, port, username, password, db
+      @host, @port, @username, @password, @db = host, port, username, password, db
       @defs = []
       @command_queue = []
 
